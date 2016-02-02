@@ -32,8 +32,8 @@ PRIMARY KEY(id)
 
 CREATE TABLE matches (
 id SERIAL,
-player1 text,
-player2 text,
-winner text,
+player1 int references player(id),
+player2 int references player(id),
+winner int references player(id),
 PRIMARY KEY(id)
 );
