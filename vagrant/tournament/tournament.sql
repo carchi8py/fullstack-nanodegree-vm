@@ -6,4 +6,34 @@
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
 
+-- First step create the database
+CREATE DATABASE tournament;
 
+--Next step enter the database
+\c tournament;
+
+--Next we need to create out tables
+--Player
+----ID
+----name
+----Totalwins
+CREATE TABLE player (
+id SERIAL,
+name text,
+totalWins int,
+PRIMARY KEY(id)
+);
+
+--Matches
+----ID
+----player1
+----player2
+----winner
+
+CREATE TABLE matches (
+id SERIAL,
+player1 text,
+player2 text,
+winner text,
+PRIMARY KEY(id)
+);
