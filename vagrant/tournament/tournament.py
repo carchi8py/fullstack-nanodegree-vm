@@ -13,6 +13,11 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
+    DB = connect()
+    c = DB.cursor()
+    c.execute("DELETE FROM matches")
+    DB.commit()
+    DB.close()
 
 
 def deletePlayers():
@@ -66,7 +71,7 @@ def playerStandings():
     """
     DB = connect()
     c = DB.cursor()
-    c.execute("SELECT player.id, player.name, player.totalWins, count(matches.id) as num from player left join matches on player.id = matches.winner group by player.id order by num;")
+    c.execute("SELECT player.id, player.name, player.totalWins, count(matches.id) as num from player left join matches on (player.id = matches.player1 or player.id = matches.player2) group by player.id order by num;")
     standings = []
     for row in c.fetchall():
         standings.append(row)
@@ -81,6 +86,14 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    DB = connect()
+    c = DB.cursor()
+    c.execute("INSERT INTO matches (player1, player2, winner) VALUES (%s, %s, %s)", (winner, loser, winner))
+    DB.commit()
+    c.execute("UPDATE player set totalWins = totalWins + 1 where player.id = (%s)", (winner,))
+    DB.commit()
+    DB.close()
+
  
  
 def swissPairings():
