@@ -119,6 +119,7 @@ def swissPairings():
     #Each loop increments us 2 elements in the list
     for i in range(0,len(list),2):
         results.append([list[i][0], list[i][1], list[i+1][0], list[i+1][1]])
+    DB.close()
     return results
 
 
