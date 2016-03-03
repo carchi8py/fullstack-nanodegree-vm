@@ -111,5 +111,14 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    DB = connect()
+    c = DB.cursor()
+    c.execute("SELECT * from player order by totalWins DESC")
+    list = c.fetchall()
+    results = []
+    #Each loop increments us 2 elements in the list
+    for i in range(0,len(list),2):
+        results.append([list[i][0], list[i][1], list[i+1][0], list[i+1][1]])
+    return results
 
 
