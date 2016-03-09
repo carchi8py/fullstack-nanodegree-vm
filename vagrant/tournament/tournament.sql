@@ -20,7 +20,6 @@ CREATE DATABASE tournament;
 CREATE TABLE player (
 id SERIAL,
 name text,
-totalWins int,
 PRIMARY KEY(id)
 );
 
@@ -32,8 +31,16 @@ PRIMARY KEY(id)
 
 CREATE TABLE matches (
 id SERIAL,
-player1 int references player(id),
-player2 int references player(id),
-winner int references player(id),
+winner int references player(id) ON DELETE CASCADE,
+loser int references player(id) ON DELETE CASCADE,
 PRIMARY KEY(id)
+);
+
+CREATE VIEW wins AS (
+  SELECT player.id
+, COUNT(*) AS wins
+FROM player
+JOIN matches
+ON player.id = winner
+GROUP BY player.id
 );

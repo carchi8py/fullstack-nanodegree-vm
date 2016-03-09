@@ -51,7 +51,7 @@ def registerPlayer(name):
     """
     DB = connect()
     c = DB.cursor()
-    c.execute("INSERT INTO player (name, totalWins) VALUES (%s, %s)", (name, 0))
+    c.execute("INSERT INTO player (name) VALUES (%s)", (name,))
     DB.commit()
     DB.close()
 
@@ -71,7 +71,8 @@ def playerStandings():
     """
     DB = connect()
     c = DB.cursor()
-    c.execute("SELECT player.id, player.name, player.totalWins, count(matches.id) as num from player left join matches on (player.id = matches.player1 or player.id = matches.player2) group by player.id order by num;")
+
+    c.execute("SELECT player.id, player.name, count(wins.id), count(matches.id) as num from player left join matches on (player.id = matches.winner or player.id = matches.loser) left join wins on (player.id = wins.id) group by player.id order by num;")
     standings = []
     for row in c.fetchall():
         standings.append(row)
@@ -88,9 +89,7 @@ def reportMatch(winner, loser):
     """
     DB = connect()
     c = DB.cursor()
-    c.execute("INSERT INTO matches (player1, player2, winner) VALUES (%s, %s, %s)", (winner, loser, winner))
-    DB.commit()
-    c.execute("UPDATE player set totalWins = totalWins + 1 where player.id = (%s)", (winner,))
+    c.execute("INSERT INTO matches (winner, loser) VALUES (%s, %s)", (winner, loser))
     DB.commit()
     DB.close()
 
@@ -113,7 +112,7 @@ def swissPairings():
     """
     DB = connect()
     c = DB.cursor()
-    c.execute("SELECT * from player order by totalWins DESC")
+    c.execute("select * from player left join wins on (player.id = wins.id) order by wins;")
     list = c.fetchall()
     results = []
     #Each loop increments us 2 elements in the list
