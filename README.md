@@ -14,4 +14,5 @@ This will turn on the VM
 4. ssh in to the VM
  vagrant ssh
  5. cd in to /vargrant/tournament
- 6. run python tournament_test.py
+ 6. run psql -f tournament.sql #This will create the database
+ 7. run python tournament_test.py #This will run the test
